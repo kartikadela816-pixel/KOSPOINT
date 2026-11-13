@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\RentalController;
+use App\Http\Controllers\PaymentController;
 
 // Halaman Beranda Utama
 Route::get('/', function () {
@@ -48,4 +49,28 @@ Route::middleware('auth')->group(function () {
     // Sewa
     Route::get('/sewa', [RentalController::class, 'index'])->name('rental.index');
     Route::get('/sewa/{rental}', [RentalController::class, 'show'])->name('rental.show');
+
+
+    // Pembayaran - Pipa
+Route::get('/pembayaran', [PaymentController::class, 'index'])
+    ->name('payments.index');
+
+Route::get('/pembayaran/tambah', [PaymentController::class, 'create'])
+    ->name('payments.create');
+
+Route::post('/pembayaran', [PaymentController::class, 'store'])
+    ->name('payments.store');
+
+});
+
+// Verifikasi Pembayaran - Admin
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/admin/pembayaran', [PaymentController::class, 'adminIndex'])
+        ->name('admin.payments.index');
+
+    Route::patch('/admin/pembayaran/{id}/setujui', [PaymentController::class, 'approve'])
+        ->name('admin.payments.approve');
+
+    Route::patch('/admin/pembayaran/{id}/tolak', [PaymentController::class, 'reject'])
+        ->name('admin.payments.reject');
 });
