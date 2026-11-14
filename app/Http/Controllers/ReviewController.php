@@ -20,6 +20,23 @@ class ReviewController extends Controller
         return view('reviews.index', compact('rentals'));
     }
 
+    // Menampilkan ulasan untuk kos milik pemilik yang login
+public function pemilikIndex()
+{
+    abort_unless(Auth::user()->isPemilik(), 403);
+
+    $reviews = \App\Models\Review::with([
+        'rental.kamar.kos'
+    ])
+        ->whereHas('rental.kamar.kos', function ($query) {
+            $query->where('id_pemilik', Auth::id());
+        })
+        ->latest()
+        ->get();
+
+    return view('pemilik.reviews.index', compact('reviews'));
+}
+
     // Menyimpan ulasan
     public function store(Request $request)
     {

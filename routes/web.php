@@ -44,6 +44,8 @@ Route::middleware('auth')->group(function () {
 
     // Pemilik
     Route::get('/pemilik/booking', [BookingController::class, 'masuk'])->name('pemilik.booking.index');
+    Route::get('/pemilik/ulasan', [ReviewController::class, 'pemilikIndex'])
+    ->name('pemilik.reviews.index');
     Route::patch('/pemilik/booking/{booking}/terima', [BookingController::class, 'terima'])->name('pemilik.booking.terima');
     Route::patch('/pemilik/booking/{booking}/tolak', [BookingController::class, 'tolak'])->name('pemilik.booking.tolak');
 

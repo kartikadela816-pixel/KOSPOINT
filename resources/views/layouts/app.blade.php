@@ -10,16 +10,29 @@
 
 <nav class="bg-blue-900 text-white p-4">
     <div class="max-w-6xl mx-auto flex justify-between items-center">
-        <a href="{{ route('beranda') }}" class="font-bold text-xl">KosPoint</a>
+        <a href="{{ route('beranda') }}" class="font-bold text-xl">
+            KosPoint
+        </a>
 
-        <div class="flex gap-4">
+        <div class="flex gap-4 items-center">
             @auth
+
+                @if(auth()->user()->isPemilik())
+                    <a href="{{ route('pemilik.reviews.index') }}"
+                       class="hover:text-yellow-300">
+                        Ulasan Kos Saya
+                    </a>
+                @endif
+
                 <span>{{ auth()->user()->name }}</span>
 
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf
-                    <button class="bg-red-500 px-3 py-1 rounded">Logout</button>
+                    <button class="bg-red-500 px-3 py-1 rounded">
+                        Logout
+                    </button>
                 </form>
+
             @else
                 <a href="{{ route('login') }}">Login</a>
                 <a href="{{ route('register') }}">Registrasi</a>
