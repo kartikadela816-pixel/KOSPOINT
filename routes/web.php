@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\RentalController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\ReviewController;
 
 // Halaman Beranda Utama
 Route::get('/', function () {
@@ -50,6 +51,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/sewa', [RentalController::class, 'index'])->name('rental.index');
     Route::get('/sewa/{rental}', [RentalController::class, 'show'])->name('rental.show');
 
+    // Ulasan - Pipa
+Route::get('/ulasan', [ReviewController::class, 'index'])
+    ->name('reviews.index');
+
+Route::post('/ulasan', [ReviewController::class, 'store'])
+    ->name('reviews.store');
 
     // Pembayaran - Pipa
 Route::get('/pembayaran', [PaymentController::class, 'index'])
