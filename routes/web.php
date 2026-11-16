@@ -2,6 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BookingController;
+use App\Http\Controllers\RentalController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\ReportController;
 
 // Halaman Beranda Utama
 Route::get('/', function () {
@@ -28,3 +33,68 @@ Route::get('/pemilik/dashboard', function () {
 Route::get('/admin/dashboard', function () {
     return view('admin.dashboard');
 })->middleware(['auth'])->name('admin.dashboard');
+
+
+
+// ===== Booking & Sewa =====
+Route::middleware('auth')->group(function () {
+    // Pencari
+    Route::get('/booking', [BookingController::class, 'index'])->name('booking.index');
+    Route::post('/kamar/{kamar}/booking', [BookingController::class, 'store'])->name('booking.store');
+    Route::patch('/booking/{booking}/batal', [BookingController::class, 'batal'])->name('booking.batal');
+
+    // Pemilik
+    Route::get('/pemilik/booking', [BookingController::class, 'masuk'])->name('pemilik.booking.index');
+    Route::get('/pemilik/ulasan', [ReviewController::class, 'pemilikIndex'])
+    ->name('pemilik.reviews.index');
+    Route::patch('/pemilik/booking/{booking}/terima', [BookingController::class, 'terima'])->name('pemilik.booking.terima');
+    Route::patch('/pemilik/booking/{booking}/tolak', [BookingController::class, 'tolak'])->name('pemilik.booking.tolak');
+
+    // Sewa
+    Route::get('/sewa', [RentalController::class, 'index'])->name('rental.index');
+    Route::get('/sewa/{rental}', [RentalController::class, 'show'])->name('rental.show');
+
+    // Ulasan - Pipa
+Route::get('/ulasan', [ReviewController::class, 'index'])
+    ->name('reviews.index');
+
+Route::post('/ulasan', [ReviewController::class, 'store'])
+    ->name('reviews.store');
+
+    // Pembayaran - Pipa
+Route::get('/pembayaran', [PaymentController::class, 'index'])
+    ->name('payments.index');
+
+Route::get('/pembayaran/tambah', [PaymentController::class, 'create'])
+    ->name('payments.create');
+
+Route::post('/pembayaran', [PaymentController::class, 'store'])
+    ->name('payments.store');
+
+    // Laporan - Pipa
+Route::get('/laporan', [ReportController::class, 'index'])
+    ->name('reports.index');
+
+Route::post('/laporan', [ReportController::class, 'store'])
+    ->name('reports.store');
+
+});
+
+// Verifikasi Pembayaran - Admin
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/admin/pembayaran', [PaymentController::class, 'adminIndex'])
+        ->name('admin.payments.index');
+
+    Route::patch('/admin/pembayaran/{id}/setujui', [PaymentController::class, 'approve'])
+        ->name('admin.payments.approve');
+
+    Route::patch('/admin/pembayaran/{id}/tolak', [PaymentController::class, 'reject'])
+        ->name('admin.payments.reject');
+
+        // Laporan - Admin
+Route::get('/admin/laporan', [ReportController::class, 'adminIndex'])
+    ->name('admin.reports.index');
+
+Route::patch('/admin/laporan/{report}', [ReportController::class, 'update'])
+    ->name('admin.reports.update');
+});
