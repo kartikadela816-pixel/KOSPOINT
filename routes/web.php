@@ -7,6 +7,8 @@ use App\Http\Controllers\RentalController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\NotificationController;
+
 
 // Halaman Beranda Utama
 Route::get('/', function () {
@@ -77,6 +79,13 @@ Route::get('/laporan', [ReportController::class, 'index'])
 
 Route::post('/laporan', [ReportController::class, 'store'])
     ->name('reports.store');
+
+        // Notifikasi - Pipa
+    Route::get('/notifikasi', [NotificationController::class, 'index'])
+        ->name('notifications.index');
+
+    Route::patch('/notifikasi/{notification}/baca', [NotificationController::class, 'markAsRead'])
+        ->name('notifications.read');
 
 });
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Report;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -48,20 +49,29 @@ class ReportController extends Controller
     }
 
     // Admin memberikan tanggapan dan mengubah status
-    public function update(Request $request, Report $report)
-    {
-        $request->validate([
-            'status' => 'required|in:menunggu,diproses,selesai,ditolak',
-            'tanggapan' => 'nullable|string',
-        ]);
 
-        $report->update([
-            'status' => $request->status,
-            'tanggapan' => $request->tanggapan,
-        ]);
+public function update(Request $request, Report $report)
+{
+    $request->validate([
+        'status' => 'required|in:menunggu,diproses,selesai,ditolak',
+        'tanggapan' => 'nullable|string',
+    ]);
 
-        return redirect()
-            ->route('admin.reports.index')
-            ->with('success', 'Laporan berhasil diperbarui.');
-    }
+    $report->update([
+        'status' => $request->status,
+        'tanggapan' => $request->tanggapan,
+    ]);
+
+    Notification::create([
+        'id_user' => $report->id_pelapor,
+        'judul' => 'Pembaruan Laporan',
+        'pesan' => 'Status laporan "' . $report->judul . '" telah diperbarui menjadi ' . ucfirst($report->status) . '. ' . ($report->tanggapan ? 'Tanggapan admin: ' . $report->tanggapan : ''),
+        'tipe' => 'laporan',
+    ]);
+
+    return redirect()
+        ->route('admin.reports.index')
+        ->with('success', 'Laporan berhasil diperbarui.');
+}
+
 }

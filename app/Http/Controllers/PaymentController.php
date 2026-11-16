@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Payment;
 use App\Models\Rental;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -75,30 +76,46 @@ class PaymentController extends Controller
             ->with('success', 'Pembayaran berhasil dikirim dan menunggu verifikasi.');
     }
 
-     // Menyetujui pembayaran
-    public function approve($id)
-    {
-        $payment = Payment::findOrFail($id);
 
-        $payment->update([
-            'status_pembayaran' => 'berhasil',
-        ]);
+// Menyetujui pembayaran
+public function approve($id)
+{
+    $payment = Payment::findOrFail($id);
 
-        return redirect()->route('admin.payments.index')
-            ->with('success', 'Pembayaran berhasil disetujui.');
-    }
+    $payment->update([
+        'status_pembayaran' => 'berhasil',
+    ]);
 
-    // Menolak pembayaran
-    public function reject($id)
-    {
-        $payment = Payment::findOrFail($id);
+    Notification::create([
+        'id_user' => $payment->id_pencari,
+        'judul' => 'Pembayaran Berhasil',
+        'pesan' => 'Pembayaran sebesar Rp' . number_format($payment->jumlah_bayar, 0, ',', '.') . ' telah disetujui oleh admin.',
+        'tipe' => 'pembayaran',
+    ]);
 
-        $payment->update([
-            'status_pembayaran' => 'ditolak',
-        ]);
+    return redirect()->route('admin.payments.index')
+        ->with('success', 'Pembayaran berhasil disetujui.');
+}
 
-        return redirect()->route('admin.payments.index')
-            ->with('success', 'Pembayaran berhasil ditolak.');
-    }
 
+
+// Menolak pembayaran
+public function reject($id)
+{
+    $payment = Payment::findOrFail($id);
+
+    $payment->update([
+        'status_pembayaran' => 'ditolak',
+    ]);
+
+    Notification::create([
+        'id_user' => $payment->id_pencari,
+        'judul' => 'Pembayaran Ditolak',
+        'pesan' => 'Pembayaran sebesar Rp' . number_format($payment->jumlah_bayar, 0, ',', '.') . ' ditolak oleh admin. Silakan periksa kembali bukti pembayaran.',
+        'tipe' => 'pembayaran',
+    ]);
+
+    return redirect()->route('admin.payments.index')
+        ->with('success', 'Pembayaran berhasil ditolak.');
+}
 }

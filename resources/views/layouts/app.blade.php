@@ -38,6 +38,11 @@
     </a>
 @endif
 
+                <a href="{{ route('notifications.index') }}"
+                   class="hover:text-yellow-300">
+                    🔔 Notifikasi
+                </a>
+
                 <span>{{ auth()->user()->name }}</span>
 
                 <form action="{{ route('logout') }}" method="POST">
