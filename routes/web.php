@@ -6,6 +6,7 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\RentalController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\ReportController;
 
 // Halaman Beranda Utama
 Route::get('/', function () {
@@ -70,6 +71,13 @@ Route::get('/pembayaran/tambah', [PaymentController::class, 'create'])
 Route::post('/pembayaran', [PaymentController::class, 'store'])
     ->name('payments.store');
 
+    // Laporan - Pipa
+Route::get('/laporan', [ReportController::class, 'index'])
+    ->name('reports.index');
+
+Route::post('/laporan', [ReportController::class, 'store'])
+    ->name('reports.store');
+
 });
 
 // Verifikasi Pembayaran - Admin
@@ -82,4 +90,11 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     Route::patch('/admin/pembayaran/{id}/tolak', [PaymentController::class, 'reject'])
         ->name('admin.payments.reject');
+
+        // Laporan - Admin
+Route::get('/admin/laporan', [ReportController::class, 'adminIndex'])
+    ->name('admin.reports.index');
+
+Route::patch('/admin/laporan/{report}', [ReportController::class, 'update'])
+    ->name('admin.reports.update');
 });

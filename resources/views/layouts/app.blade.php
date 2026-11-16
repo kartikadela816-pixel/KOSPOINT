@@ -18,11 +18,25 @@
             @auth
 
                 @if(auth()->user()->isPemilik())
-                    <a href="{{ route('pemilik.reviews.index') }}"
-                       class="hover:text-yellow-300">
-                        Ulasan Kos Saya
-                    </a>
-                @endif
+    <a href="{{ route('pemilik.reviews.index') }}"
+       class="hover:text-yellow-300">
+        Ulasan Kos Saya
+    </a>
+@endif
+
+@if(auth()->user()->isPencari())
+    <a href="{{ route('reports.index') }}"
+       class="hover:text-yellow-300">
+        Laporan
+    </a>
+@endif
+
+@if(auth()->user()->isAdmin())
+    <a href="{{ route('admin.reports.index') }}"
+       class="hover:text-yellow-300">
+        Kelola Laporan
+    </a>
+@endif
 
                 <span>{{ auth()->user()->name }}</span>
 
