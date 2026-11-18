@@ -47,7 +47,7 @@ class BookingController extends Controller
                 'status_booking' => 'menunggu',
             ]);
 
-            $kamarKos->update(['status_kamar' => 'dipesan']);
+            $kamarKos->forceFill(['status_kamar' => 'dipesan'])->save();
 
             return redirect()->route('booking.index')
                 ->with('success', 'Booking berhasil diajukan. Tunggu konfirmasi pemilik.');
@@ -64,7 +64,9 @@ class BookingController extends Controller
 
         DB::transaction(function () use ($booking) {
             $booking->update(['status_booking' => 'dibatalkan']);
-            KamarKos::whereKey($booking->id_kamar)->update(['status_kamar' => 'tersedia']);
+
+            KamarKos::whereKey($booking->id_kamar)->first()
+                ?->forceFill(['status_kamar' => 'tersedia'])->save();
         });
 
         return back()->with('success', 'Booking dibatalkan.');
@@ -113,7 +115,7 @@ class BookingController extends Controller
                 'status_sewa' => 'aktif',
             ]);
 
-            $kamar->update(['status_kamar' => 'terisi']);
+            $kamar->forceFill(['status_kamar' => 'terisi'])->save();
         });
 
         return back()->with('success', 'Booking diterima dan data sewa dibuat.');
@@ -133,7 +135,9 @@ class BookingController extends Controller
                 'catatan_pemilik' => $request->input('catatan_pemilik'),
                 'tanggal_ditanggapi' => now(),
             ]);
-            KamarKos::whereKey($booking->id_kamar)->update(['status_kamar' => 'tersedia']);
+
+            KamarKos::whereKey($booking->id_kamar)->first()
+                ?->forceFill(['status_kamar' => 'tersedia'])->save();
         });
 
         return back()->with('success', 'Booking ditolak.');
