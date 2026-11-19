@@ -4,34 +4,19 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
-    /**
-     * Run the migrations.
-     */
-public function up(): void
-{
-    Schema::create('facilities', function (Blueprint $table) {
-        $table->id();
-        $table->foreignId('id_kamar')
-              ->constrained('kamar_kos')
-              ->cascadeOnUpdate()
-              ->cascadeOnDelete();
+return new class extends Migration {
+    public function up(): void
+    {
+        Schema::create('kos_facility', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('kos_id')->constrained('kos')->cascadeOnDelete();
+            $table->foreignId('facility_id')->constrained('facilities')->cascadeOnDelete();
+            $table->unique(['kos_id', 'facility_id']);
+        });
+    }
 
-        $table->string('nama_fasilitas');
-        $table->string('keterangan')->nullable();
-
-        $table->timestamps();
-
-        $table->unique(['id_kamar', 'nama_fasilitas']);
-    });
-}
-
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('facilities');
+        Schema::dropIfExists('kos_facility');
     }
 };

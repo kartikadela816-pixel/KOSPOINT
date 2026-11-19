@@ -17,6 +17,8 @@ return new class extends Migration
 
             $table->string('nama_file');
             $table->string('url_foto');
+             $table->string('keterangan')->nullable();
+            $table->boolean('is_utama')->default(false);
             $table->unsignedInteger('urutan')->default(1);
 
             $table->timestamps();

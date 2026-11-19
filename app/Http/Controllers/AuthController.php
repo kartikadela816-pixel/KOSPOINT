@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+    public function showLogin()
+    {
+        return view('auth.login');
+    }
+
     public function showRegister()
     {
         return view('auth.register');
@@ -16,31 +21,27 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        $request->validate([
+        $data = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:6|confirmed',
-            'nomor_hp' => 'required|string|max:20',
+            'phone' => 'nullable|string|max:25',
+            'password' => 'required|string|min:8|confirmed',
             'role' => 'required|in:pencari,pemilik',
         ]);
 
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'nomor_hp' => $request->nomor_hp,
-            'role' => $request->role,
-            'status_akun' => 'aktif',
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'phone' => $data['phone'] ?? null,
+            'password' => Hash::make($data['password']),
+            'role' => $data['role'],
         ]);
 
         Auth::login($user);
+        $request->session()->regenerate();
 
-        return $this->redirectByRole($user);
-    }
-
-    public function showLogin()
-    {
-        return view('auth.login');
+        return redirect()->route('home')
+            ->with('success', 'Registrasi berhasil.');
     }
 
     public function login(Request $request)
@@ -50,15 +51,21 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-
-            return $this->redirectByRole(Auth::user());
+        if (!Auth::attempt($credentials)) {
+            return back()
+                ->withErrors(['email' => 'Email atau password salah.'])
+                ->onlyInput('email');
         }
 
-        return back()->withErrors([
-            'email' => 'Email atau password salah.',
-        ])->onlyInput('email');
+        $request->session()->regenerate();
+
+        $user = Auth::user();
+
+        return match ($user->role) {
+            'admin' => redirect()->route('admin.dashboard'),
+            'pemilik' => redirect()->route('pemilik.dashboard'),
+            default => redirect()->route('pencari.dashboard'),
+        };
     }
 
     public function logout(Request $request)
@@ -68,19 +75,7 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login');
-    }
-
-    private function redirectByRole($user)
-    {
-        if ($user->role === 'pemilik') {
-            return redirect()->route('pemilik.dashboard');
-        }
-
-        if ($user->role === 'admin') {
-            return redirect()->route('admin.dashboard');
-        }
-
-        return redirect()->route('beranda');
+        return redirect()->route('home')
+            ->with('success', 'Berhasil keluar.');
     }
 }

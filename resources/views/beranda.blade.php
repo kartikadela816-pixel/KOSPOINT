@@ -1,95 +1,238 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>KosPoint</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100">
 
-<nav class="bg-blue-900 text-white p-4">
-    <div class="max-w-6xl mx-auto flex justify-between items-center">
-        <a href="{{ route('beranda') }}" class="font-bold text-xl">
-            KosPoint
-        </a>
+@extends('layouts.app')
 
-        <div class="flex gap-4 items-center">
-            <a href="{{ route('beranda') }}">Beranda</a>
-            <a href="#">Cari Kos</a>
-            <a href="#">Tentang</a>
+@section('title', 'KOSPOINT - Find Your Comfort')
 
-            @auth
-                <span>{{ auth()->user()->name }}</span>
+@section('content')
 
-                <form action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    <button class="bg-red-500 px-3 py-1 rounded">
-                        Logout
-                    </button>
-                </form>
-            @else
-                <a href="{{ route('login') }}">Login</a>
-                <a href="{{ route('register') }}">Registrasi</a>
-            @endauth
-        </div>
+<header class="navbar">
+    <a href="/" class="logo">
+        <span class="logo-icon">K</span>
+        KOS<span>POINT</span>
+    </a>
+
+    <nav class="nav-menu">
+        <a href="/" class="active">Beranda</a>
+        <a href="#cari">Cari Kos</a>
+        <a href="#rekomendasi">Rekomendasi</a>
+        <a href="#tentang">Tentang Kami</a>
+    </nav>
+
+    <div class="nav-actions">
+        <a href="/login" class="login-btn">Masuk</a>
+        <a href="/register" class="register-btn">Daftar</a>
     </div>
-</nav>
+</header>
 
-<section class="bg-blue-900 text-white py-16">
-    <div class="max-w-6xl mx-auto px-6 text-center">
-        <h1 class="text-4xl font-bold mb-4">
-            Temukan Kos yang Sesuai Kebutuhanmu
+<main>
+
+<section class="hero">
+    <div class="hero-content">
+        <span class="hero-label">TEMUKAN HUNIAN IMPIANMU</span>
+
+        <h1>
+            Temukan Kos Nyaman,
+            <span>Mulai Cerita Barumu.</span>
         </h1>
 
-        <p class="mb-6">
-            Cari kos berdasarkan lokasi, harga, jenis kos, dan fasilitas.
+        <p>
+            Cari tempat tinggal yang nyaman, aman, dan sesuai
+            kebutuhanmu. Semua pilihan kos ada di KOSPOINT.
         </p>
 
-        <form action="#" class="flex gap-2 max-w-xl mx-auto">
-            <input type="text"
-                   placeholder="Cari nama kos, alamat, atau wilayah..."
-                   class="w-full p-3 rounded text-black">
+        <a href="#cari" class="hero-button">
+            Temukan Kos Sekarang →
+        </a>
 
-            <button class="bg-yellow-400 text-black px-5 rounded font-semibold">
-                Cari
-            </button>
-        </form>
+        <div class="hero-stat">
+            <div>
+                <strong>100+</strong>
+                <small>Pilihan Kos</small>
+            </div>
+            <div>
+                <strong>50+</strong>
+                <small>Pemilik Kos</small>
+            </div>
+            <div>
+                <strong>4.8/5</strong>
+                <small>Rating Pengguna</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="hero-image">
+        <img
+            src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1000"
+            alt="Interior hunian nyaman">
+        <div class="image-tag">
+            <span>✦</span>
+            Temukan Hunian Nyaman
+        </div>
     </div>
 </section>
 
-<section class="max-w-6xl mx-auto p-6">
-    <h2 class="text-2xl font-bold mb-4">Kenapa Memakai KosPoint?</h2>
+<section class="search-section" id="cari">
+    <div class="section-heading">
+        <span class="eyebrow">PENCARIAN KOS</span>
+        <h2>Mau Cari Kos di Mana?</h2>
+        <p>Temukan kos yang sesuai dengan kebutuhanmu.</p>
+    </div>
 
-    <div class="grid md:grid-cols-3 gap-4">
-        <div class="bg-white p-5 rounded shadow">
-            <h3 class="font-bold mb-2">Peta Interaktif</h3>
-            <p>Lihat lokasi kos melalui marker pada peta.</p>
+    <form action="{{ route('kos.index') }}" method="GET" class="search-box">
+
+        <div class="search-field">
+            <label>Lokasi</label>
+            <input type="text" name="lokasi"
+                placeholder="Masukkan nama daerah atau kampus">
         </div>
 
-        <div class="bg-white p-5 rounded shadow">
-            <h3 class="font-bold mb-2">Informasi Kamar</h3>
-            <p>Lihat harga, fasilitas, dan status ketersediaan kamar.</p>
+        <div class="search-field">
+            <label>Harga Maksimal</label>
+            <select name="harga">
+                <option value="">Semua harga</option>
+                <option value="500000">Di bawah Rp500 ribu</option>
+                <option value="1000000">Di bawah Rp1 juta</option>
+                <option value="2000000">Di bawah Rp2 juta</option>
+            </select>
         </div>
 
-        <div class="bg-white p-5 rounded shadow">
-            <h3 class="font-bold mb-2">Hubungi Pemilik</h3>
-            <p>Hubungi pemilik kos melalui WhatsApp atau telepon.</p>
+        <div class="search-field">
+            <label>Tipe Kos</label>
+            <select name="tipe">
+                <option value="">Semua tipe</option>
+                <option value="Putra">Kos Putra</option>
+                <option value="Putri">Kos Putri</option>
+                <option value="Campur">Kos Campur</option>
+            </select>
         </div>
+
+        <button type="submit" class="search-button">
+            🔍 Cari Kos
+        </button>
+    </form>
+</section>
+
+<section class="category-section">
+    <div class="section-heading">
+        <span class="eyebrow">KATEGORI</span>
+        <h2>Temukan Kos Sesuai Kebutuhan</h2>
+    </div>
+
+    <div class="category-grid">
+        <a href="{{ route('kos.index', ['tipe'=>'Putra']) }}" class="category-card">
+            <div class="category-icon">👨</div>
+            <h3>Kos Putra</h3>
+            <p>Hunian khusus pria</p>
+        </a>
+
+        <a href="{{ route('kos.index', ['tipe'=>'Putri']) }}" class="category-card">
+            <div class="category-icon">👩</div>
+            <h3>Kos Putri</h3>
+            <p>Hunian khusus wanita</p>
+        </a>
+
+        <a href="{{ route('kos.index', ['tipe'=>'Campur']) }}" class="category-card">
+            <div class="category-icon">🏠</div>
+            <h3>Kos Campur</h3>
+            <p>Hunian bersama</p>
+        </a>
+
+        <a href="#rekomendasi" class="category-card">
+            <div class="category-icon">⭐</div>
+            <h3>Kos Favorit</h3>
+            <p>Pilihan terbaik</p>
+        </a>
     </div>
 </section>
 
-<section class="max-w-6xl mx-auto p-6">
-    <h2 class="text-2xl font-bold mb-4">Kos Terbaru</h2>
+<section class="property-section" id="rekomendasi">
+    <div class="section-heading heading-row">
+        <div>
+            <span class="eyebrow">PILIHAN TERBAIK</span>
+            <h2>Rekomendasi Kos</h2>
+            <p>Beberapa pilihan hunian untukmu.</p>
+        </div>
 
-    <p class="text-gray-600">
-        Belum ada data kos. Data kos akan muncul setelah pemilik menambahkan kos.
-    </p>
+        <a href="{{ route('kos.index') }}" class="see-all">
+            Lihat Semua →
+        </a>
+    </div>
+
+    <div class="property-grid">
+        @foreach([
+            [
+                'nama'=>'Kos Melati Residence',
+                'lokasi'=>'Banyuwangi',
+                'harga'=>'650.000',
+                'tipe'=>'Putri',
+                'gambar'=>'photo-1522708323590-d24dbb6b0267'
+            ],
+            [
+                'nama'=>'Kos Harmoni',
+                'lokasi'=>'Banyuwangi',
+                'harga'=>'850.000',
+                'tipe'=>'Putra',
+                'gambar'=>'photo-1505693416388-ac5ce068fe85'
+            ],
+            [
+                'nama'=>'Kos Green House',
+                'lokasi'=>'Banyuwangi',
+                'harga'=>'1.000.000',
+                'tipe'=>'Campur',
+                'gambar'=>'photo-1493809842364-78817add7ffb'
+            ]
+        ] as $kos)
+        <article class="property-card">
+            <div class="property-image">
+                <img
+                    src="https://images.unsplash.com/{{ $kos['gambar'] }}?w=700"
+                    alt="{{ $kos['nama'] }}">
+                <span class="property-type">{{ $kos['tipe'] }}</span>
+            </div>
+
+            <div class="property-info">
+                <span class="property-location">📍 {{ $kos['lokasi'] }}</span>
+                <h3>{{ $kos['nama'] }}</h3>
+
+                <div class="property-bottom">
+                    <p>
+                        <strong>Rp{{ $kos['harga'] }}</strong>
+                        <small>/ bulan</small>
+                    </p>
+                    <span>★ 4.8</span>
+                </div>
+
+                <a href="{{ route('kos.index') }}" class="detail-button">
+                    Lihat Detail
+                </a>
+            </div>
+        </article>
+        @endforeach
+    </div>
 </section>
 
-<footer class="bg-blue-900 text-white p-6 text-center mt-10">
-    <p>&copy; 2026 KosPoint</p>
+<section class="cta-section" id="tentang">
+    <div>
+        <span class="eyebrow">BERSAMA KOSPOINT</span>
+        <h2>Temukan Hunian yang Membuatmu Nyaman.</h2>
+        <p>
+            Mulai perjalananmu menemukan tempat tinggal
+            yang tepat bersama KOSPOINT.
+        </p>
+    </div>
+
+    <a href="#cari" class="cta-button">Cari Kos Sekarang →</a>
+</section>
+
+</main>
+
+<footer class="footer">
+    <a href="/" class="logo footer-logo">
+        <span class="logo-icon">K</span>
+        KOS<span>POINT</span>
+    </a>
+
+    <p>© {{ date('Y') }} KOSPOINT. Find Your Comfort, Find Your Home.</p>
 </footer>
 
-</body>
-</html>
+@endsection

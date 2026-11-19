@@ -4,42 +4,27 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
-    /**
-     * Run the migrations.
-     */
+return new class extends Migration {
     public function up(): void
     {
-        Schema::create('kos', function (Blueprint $table) {
+        Schema::create('kamar_kos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_pemilik')
-                  ->constrained('users')
-                  ->cascadeOnUpdate()
-                  ->restrictOnDelete();
-
-            $table->string('nama_kos');
-            $table->enum('jenis_kos', ['putra', 'putri', 'campur']);
-            $table->text('alamat');
+            $table->foreignId('kos_id')->constrained('kos')->cascadeOnDelete();
+            $table->string('nomor_kamar');
+            $table->string('tipe_kamar')->nullable();
+            $table->decimal('harga', 12, 2);
+            $table->string('ukuran')->nullable();
             $table->text('deskripsi')->nullable();
-            $table->text('aturan_kos')->nullable();
-            $table->string('nomor_whatsapp', 20)->nullable();
-            $table->string('nomor_telepon', 20)->nullable();
-            $table->decimal('latitude', 10, 7)->nullable();
-            $table->decimal('longitude', 10, 7)->nullable();
-            $table->enum('status_kos', ['draft', 'aktif', 'nonaktif'])
-                  ->default('draft');
-
+            $table->enum('status', ['tersedia', 'terisi', 'perbaikan'])
+                ->default('tersedia');
             $table->timestamps();
-            $table->softDeletes();
+
+            $table->unique(['kos_id', 'nomor_kamar']);
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('kos');
+        Schema::dropIfExists('kamar_kos');
     }
 };
