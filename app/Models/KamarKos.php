@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class KamarKos extends Model
 {
@@ -19,7 +20,7 @@ class KamarKos extends Model
         'deskripsi',
     ];
 
-    public function kos()
+    public function kos(): BelongsTo
     {
         return $this->belongsTo(Kos::class, 'id_kos');
     }

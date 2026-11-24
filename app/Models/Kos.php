@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Kos extends Model
 {
@@ -25,17 +27,22 @@ class Kos extends Model
         'status_kos',
     ];
 
-    public function pemilik()
+    public function pemilik(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id_pemilik');
     }
 
-    public function kamar()
+    public function kamar(): HasMany
     {
         return $this->hasMany(KamarKos::class, 'id_kos');
     }
 
-    public function fotoKos()
+    public function kamarKos(): HasMany
+    {
+        return $this->hasMany(KamarKos::class, 'id_kos');
+    }
+
+    public function fotoKos(): HasMany
     {
         return $this->hasMany(FotoKos::class, 'id_kos');
     }
