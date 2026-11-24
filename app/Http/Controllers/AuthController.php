@@ -9,10 +9,16 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    public function showRegister()
-    {
-        return view('auth.register');
+public function showRegister(Request $request)
+{
+    $role = $request->query('role', 'pencari');
+
+    if (!in_array($role, ['pencari', 'pemilik'])) {
+        $role = 'pencari';
     }
+
+    return view('auth.register', compact('role'));
+}
 
     public function register(Request $request)
     {
@@ -34,6 +40,7 @@ class AuthController extends Controller
         ]);
 
         Auth::login($user);
+$request->session()->regenerate();
 
         return $this->redirectByRole($user);
     }
@@ -51,6 +58,15 @@ class AuthController extends Controller
         ]);
 
         if (Auth::attempt($credentials)) {
+            // Akun yang dinonaktifkan admin tidak boleh masuk.
+            if (Auth::user()->status_akun === 'nonaktif') {
+                Auth::logout();
+
+                return back()->withErrors([
+                    'email' => 'Akun Anda dinonaktifkan. Hubungi admin.',
+                ])->onlyInput('email');
+            }
+
             $request->session()->regenerate();
 
             return $this->redirectByRole(Auth::user());
