@@ -36,6 +36,14 @@ class User extends Authenticatable
         ];
     }
 
+    /**
+     * Daftar kos milik pengguna (untuk role pemilik).
+     */
+    public function kos(): HasMany
+    {
+        return $this->hasMany(Kos::class, 'id_pemilik');
+    }
+
     // Mengecek peran pengguna
     public function isAdmin(): bool
     {
