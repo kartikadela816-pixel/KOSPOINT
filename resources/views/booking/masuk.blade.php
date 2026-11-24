@@ -20,7 +20,7 @@
                     <p class="text-sm mt-1">Catatan: {{ $b->catatan_pencari }}</p>
                 @endif
             </div>
-            <span class="px-3 py-1 rounded text-sm bg-gray-100">{{ ucfirst($b->status_booking) }}</span>
+            <span class="px-3 py-1 rounded text-sm bg-emerald-50">{{ ucfirst($b->status_booking) }}</span>
         </div>
 
         @if($b->status_booking === 'menunggu')

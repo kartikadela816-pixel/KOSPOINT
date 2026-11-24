@@ -16,7 +16,7 @@
                     {{ $r->tanggal_mulai->format('d M Y') }} &ndash; {{ $r->tanggal_selesai->format('d M Y') }}
                 </p>
             </div>
-            <span class="px-3 py-1 rounded text-sm h-fit bg-gray-100">{{ ucfirst($r->status_sewa) }}</span>
+            <span class="px-3 py-1 rounded text-sm h-fit bg-emerald-50">{{ ucfirst($r->status_sewa) }}</span>
         </div>
     </a>
 @empty

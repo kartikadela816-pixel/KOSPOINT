@@ -30,7 +30,7 @@
                     'diterima' => 'bg-green-100 text-green-800',
                     'ditolak' => 'bg-red-100 text-red-800',
                     'dibatalkan' => 'bg-gray-200 text-gray-700',
-                ][$b->status_booking] ?? 'bg-gray-100';
+                ][$b->status_booking] ?? 'bg-emerald-50';
             @endphp
             <span class="px-3 py-1 rounded text-sm {{ $warna }}">{{ ucfirst($b->status_booking) }}</span>
         </div>
@@ -47,7 +47,7 @@
 
             @if($b->rental)
                 <a href="{{ route('rental.show', $b->rental) }}"
-                   class="bg-blue-900 text-white px-3 py-1 rounded">Lihat Sewa</a>
+                   class="bg-emerald-600 text-white px-3 py-1 rounded">Lihat Sewa</a>
             @endif
         </div>
     </div>

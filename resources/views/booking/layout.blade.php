@@ -6,9 +6,9 @@
     <title>@yield('title', 'KosPoint')</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100">
+<body class="bg-emerald-50">
 
-<nav class="bg-blue-900 text-white p-4">
+<nav class="bg-emerald-600 text-white p-4">
     <div class="max-w-6xl mx-auto flex justify-between items-center">
         <a href="{{ route('beranda') }}" class="font-bold text-xl">KosPoint</a>
 

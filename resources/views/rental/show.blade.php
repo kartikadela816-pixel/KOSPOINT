@@ -2,7 +2,7 @@
 @section('title', 'Detail Sewa')
 
 @section('content')
-<a href="{{ route('rental.index') }}" class="text-blue-900">&larr; Kembali</a>
+<a href="{{ route('rental.index') }}" class="text-emerald-700">&larr; Kembali</a>
 <h1 class="text-2xl font-bold my-4">Detail Sewa</h1>
 
 <div class="bg-white p-6 rounded shadow">
